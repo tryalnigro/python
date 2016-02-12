@@ -1,0 +1,44 @@
+# -*- coding: utf-8 -*- 
+import sys
+argvs = sys.argv
+if len(argvs)<2:
+	print "Usage: $python %s *.chamame.csv" %argvs[0]
+	quit()
+
+fl = open(argvs[1],'r').readlines()
+del fl[0]
+
+psDict = {}
+psList = []
+spsDict = {}
+spsList = []
+for f in fl:
+	if len(f.split(','))>5:
+		ps = f.split(',')[5]
+		sps = ps.split('-')[0]
+		psDict[ps] = 0
+		psList.append(ps)
+		spsDict[sps] = 0
+		spsList.append(sps)
+
+psKeys = sorted(psDict.keys(),key=lambda x: x[:2])
+spsKeys = sorted(spsDict.keys(),key=lambda x: x[:2])
+
+psCounts = []
+spsCounts = []
+
+for pk in psKeys:
+	psCounts.append(psList.count(pk))
+for spk in spsKeys:
+	spsCounts.append(spsList.count(spk))
+
+output = open(argvs[1]+'.partSpeech.csv','w')
+soutput = open(argvs[1]+'.simplePartSpeech.csv','w')
+
+for pk,psc in zip(psKeys,psCounts):
+	output.writelines(pk+','+str(psc)+'\n')
+for spk,spsc in zip(spsKeys,spsCounts):
+	soutput.writelines(spk+','+str(spsc)+'\n')
+
+output.close()
+soutput.close()
